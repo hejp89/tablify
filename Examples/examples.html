@@ -1,0 +1,27 @@
+<html>
+    <script src="../tablify.js"></script>
+    <script>
+    var data = [
+        {'name': 'Gary', 'class': 1, 'mass': 12},
+        {'name': 'Barry', 'class': 1, 'mass': 165},
+        {'name': 'Sally', 'class': 1, 'mass': 102},
+        {'name': 'Sally', 'class': 1, 'mass': 102},
+        {'name': 'Sally', 'class': 2, 'mass': 102},
+        {'name': 'Sally', 'class': 2, 'mass': 102},
+        {'name': 'Sally', 'class': 2, 'mass': 102}
+    ];
+
+
+    var r = tablify.agg(data, function(a, b){return a + b;}, ['name', 'class'], 'mass');
+    /* r: [{"mass": 12, "name": "Gary",  "class": 1},
+          {"mass": 165, "name": "Barry", "class": 1},
+          {"mass": 204, "name": "Sally", "class": 1},
+          {"mass": 306, "name": "Sally", "class": 2}] */
+
+    var c = tablify.agg(data, function(a, b){return a + 1;}, ['name'], 'count');
+    /* c: [{"count": 1,"name": "Gary"},
+           {"count": 1,"name": "Barry"},
+           {"count": 5,"name": "Sally"}] */
+
+    </script>
+</html>
