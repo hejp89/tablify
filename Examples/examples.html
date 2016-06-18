@@ -4,24 +4,54 @@
     var data = [
         {'name': 'Gary', 'class': 1, 'mass': 12},
         {'name': 'Barry', 'class': 1, 'mass': 165},
+        {'name': 'Sally', 'class': 1, 'mass': 92},
         {'name': 'Sally', 'class': 1, 'mass': 102},
-        {'name': 'Sally', 'class': 1, 'mass': 102},
-        {'name': 'Sally', 'class': 2, 'mass': 102},
-        {'name': 'Sally', 'class': 2, 'mass': 102},
-        {'name': 'Sally', 'class': 2, 'mass': 102}
+        {'name': 'Sally', 'class': 2, 'mass': 10},
+        {'name': 'Sally', 'class': 2, 'mass': 56},
+        {'name': 'Sally', 'class': 2, 'mass': 2}
     ];
 
+    // Create a Grouper object passing the data and the fields to group by
+    var grouper = new tablify.Grouper(data, ['name', 'class']);
 
-    var r = tablify.agg(data, function(a, b){return a + b;}, ['name', 'class'], 'mass');
-    /* r: [{"mass": 12, "name": "Gary",  "class": 1},
-          {"mass": 165, "name": "Barry", "class": 1},
-          {"mass": 204, "name": "Sally", "class": 1},
-          {"mass": 306, "name": "Sally", "class": 2}] */
+    // The grouped data can be accessed using the groups function
+    var groups = grouper.groups();
+    console.log('Grouped data:', groups);
 
-    var c = tablify.agg(data, function(a, b){return a + 1;}, ['name'], 'count');
-    /* c: [{"count": 1,"name": "Gary"},
-           {"count": 1,"name": "Barry"},
-           {"count": 5,"name": "Sally"}] */
+    // Calculate the sum, count and average mas for each of the groups
+    var sum = grouper.sum('mass');
+    var count = grouper.count();
+    var average = grouper.average('mass');
+
+    // Use a custom aggregation function with the agg method
+    function variance(arr){
+        var mean = arr.reduce(function(v1, v2) { return v1 + v2.mass; }, 0) / arr.length;
+        return arr.reduce(function(v1, v2) { return v1 + Math.pow(v2.mass - mean, 2); }, 0) / arr.length;
+    }
+
+    // Calculate the variance for each group using the variance function. The second argument specifies the name to be given to the agg result in the returned object
+    var variance = grouper.agg(variance, 'variance');
+
+    // Print the output to the console
+    function print(arr, aggVar){
+        for (var i in arr) {
+            var group = arr[i].group.join(', ');
+
+            console.log(group, ':', arr[i][aggVar]);
+        }
+    }
+
+    console.log('Sum:');
+    print(sum, 'sum');
+
+    console.log('\nCount:');
+    print(count, 'count');
+
+    console.log('\nAverage:');
+    print(average, 'average');
+
+    console.log('\nVariance:');
+    print(variance, 'variance');
 
     </script>
 </html>
